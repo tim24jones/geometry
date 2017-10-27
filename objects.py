@@ -26,6 +26,13 @@ class circle
     def point_is_in(self,point):
     def point_is_outside(self,point):
 class intersection(self,oneline,twoline):
+    def angle_1
+    def angle_2
+    def angle_3
+    def angle_4
+    #adjacent angles belong to class straightangle
+    #opposite angles equal
+
 class straightangle:
     def __init__(line,point):
 class route:
@@ -36,4 +43,4 @@ class rect_figure(closed_route with lines)
 class polygon(n_sides,rect_figure)
 class reg_polygon(n_equal sides,polygon)
 
-equilateral, equiangular, subtending, congruence, equality, in ratio, similar
+equilateral, equiangular, subtending, congruence, equality, in ratio, similar, adjacent
