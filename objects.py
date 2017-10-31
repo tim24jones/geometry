@@ -1,24 +1,8 @@
 import random
 import numpy as np
-#%matplotlib inline (potentially for demonstrations, but not the central logic)
-#plotting is an output to illustrate objects that exist with independent logic, usually thought of visually
-class geo_session:
-    def __init__(self,ledger=[],canvas_sizemin=[-500,-500],canvas_sizemax=[500,500]):#ordered pairs
-        self.ledger=ledger
-        self.canvas_maxpt=canvas_sizemax
-        self.canvas_minpt=canvas_sizemin
-        self.canvas_xwidth=self.canvas_maxpt[0]-self.canvas_minpt[0]
-        self.canvas_ywidth=self.canvas_maxpt[1]-self.canvas_minpt[1]
-        #including just these two as they will be most likely called for visualization
-        #could be generalized if important
-    def addtoledger(self,geo_object)
-        ledger=ledger+(geo_object,)+tuple(geo_object.attributes)
-    #def add_shape(self,) or add_construction
-#added to list as a tuple of {object:object.attributes} with default attributes=Null
-#attributes are things that necessarily connect or are part of the object, such as line objects for an intersection object
 
 class geo_object:
-    __init__():
+    __init__(self,geo_session):
 
     def constructible_operation(self,construct_fn):
         constructible_operations=(makepoint(),makeline(),make_circle_center_radius())
@@ -30,54 +14,36 @@ class geo_object:
         else
             return False
 
-    class space:
-        def __init__(self,dimension=2):
-            self.dimen=dimension
-        def points_in_space(self):
-            for points in 
-        def add_dimension(self,dims_added):
-            self.dimen=self.dimen+dims_added
-            #for point in space
-                #point=point+[0]
-            #add dimension to contained points, initialize with 0 by default
-        def points_in_space(self):
-            #return list of points in space
-
-    class point()
-        def __init__(space_name,coordinates):
-            self.space=space_name
+    class geopoint:
+        def __init__(self,coordinates,geo_session):
             self.coords=coordinates
-            self.dimens=len(coordinates)
-            self.attributes=(space_name,)+tuple(self.coords)
+            self.dimens=np.array(coordinates).ravel.shape[1]
+            self.attributes=np.array('point',self.dimens,self.coords) #attributes not tuples so that printable variables can be assigned and then changed to numbers
+            if self.attributes not in geo_session.ledger:
+                geo_session.ledger=geo_session.ledger+[self.attributes]
         def __str__(self):
-            glue=','
-            return '('+glue.join(str(n) for n in self.coords)+')'
+            return np.array(coordinates).ravel
 
-    def make_point(geo_session,space_name,minvalues=[0]*dimension,maxvalues=[1]*dimension):
-        #takes number of dimensions, and optional lists of the 
-        #minimum and maximum values for each dimension
-        #(listing x,y,z... etc. as needed), defaulting to ranges between 0 and 1
-        while dimension<(len(minvalues) or len(maxvalues)):
-            print('Dimension specified is too small for the number of specified parameters.  Now trying a larger dimension')
-            dimension=dimension+1
-        if len(minvalues)!=len(maxvalues):
-            print('Dimension mismatch: There must be the same number of maximum and minimum values specified.  Adding extra values to compensate.')
-            while len(minvalues)<len(maxvalues):
-                minvalues=minvalues+[0]
-            while len(minvalues)>len(maxvalues):
-                maxvalues=maxvalues+[1]
-        point_value=[]
-        for n in range(dimension):
-            pt_domain=random.randrange(minvalue[n],maxvalue[n])
-            point_value=point_value+pt_domain
-        new_point=point(space_name,point_dimens)
-        geo_session.ledger=geo_session.ledger+[('Point',)+tuple(new_point.attributes)]
-        #point is added to the ledger as ('Point',space_in_which_point_is_defined,[coordinates])
-        return new_point
-
-def connect_lineseg(onepoint,anotherpoint):
-    
-def ispointonline(apoint,aline):
+    class geoline:
+        def __init__(self,point,otherpoint,geo_session):
+            self.point1=point
+            self.point2=otherpoint
+            self.pointlist=np.array([self.point1],[self.point2])
+            self.dimens=np.array(self.point1.dimens,self.point2.dimens).max
+            self.attributes=np.array(['line',self.dimens,self.pointlist])
+            #self.equation to be done
+            if self.attributes not in geo_session.ledger:
+                geo_session.ledger=geo_session.ledger+[self.attributes]
+        def __str__(self):
+            return np.vstack(self.point1,self.point2)
+            def getdirection(self):
+                return (self.onepoint-self.otherpoint)
+        def is_same(self,otherline):
+        def is_parallel(self,otherline):
+        def is_skew(self,otherline):
+        def intersects(self,otherline):
+        def equation(self):
+        def ispointonline(self,point):
         directionvect=aline-apoint
         componentlist=[]
         x=(apoint[0]-aline.onepoint[0])/aline.getdirection[0]
@@ -85,30 +51,32 @@ def ispointonline(apoint,aline):
             if (x!=(apoint[i]-aline.onepoint[i])/aline.getdirection[i]):
                 return False
         return True
+
         
-def ispointonlinesegment(point,lineseg):
+    class geolseg:#line segment
+        def __init__(self,point,otherpoint,geo_session):
+            self.point1=point
+            self.point2=otherpoint
+            self.pointlist=np.array([self.point1],[self.point2])
+            self.dimens=np.array(self.point1.dimens,self.point2.dimens).max
+            #self.equation to be done
+            self.attributes=np.array(['lseg',self.dimens,self.pointlist])
+            if self.attributes not in geo_session.ledger:
+                geo_session.ledger=geo_session.ledger+[self.attributes]
+        def __str__(self):
+            return np.vstack(self.point1,self.point2)
+        def is_same(self,otherline):
+        def is_parallel(self,otherline):
+        def is_skew(self,otherline):
+        def intersects(self,otherline):
+        def equation(self)
+        def is_equal(self,otherlinesegment):
+        def is_shorter(self,otherlinesegment):
+        def is_longer(self,otherlinesegment):
+        def extend(self,endpoint):
+        def ispointonsegment(self,point):
 
-class line:
-    def __init__(self,onepoint,anotherpoint):
-        parallelvect=anotherpoint-onepoint
-    def getpoint(self):
-        return self.onepoint
-    def getotherpoint(self):
-        return self.otherpoint
-    def getdirection(self):
-        return (self.onepoint-self.otherpoint)
-    def is_equal(self,otherline):
-    def is_parallel(self,otherline):
-    def is_skew(self,otherline):
-    def intersects(self,otherline):
-    def equation(self)
 
-class linesegment:
-    def __init__(self,firstpoint,lastpoint):
-    def is_equal(self,otherlinesegment):
-    def is_shorter(self,otherlinesegment):
-    def is_longer(self,otherlinesegment):
-    def extend(self,endpoint):
 class circle:
     def __init__(onepoint,twopoint,threepoint):
         center
