@@ -4,8 +4,8 @@ class geo_session:
         self.ledger=ledger
         self.canvas_maxpt=canvas_sizemax
         self.canvas_minpt=canvas_sizemin
-        self.varx=np.arange(canvas_sizemin[0],canvas_sizemax[0])
-        self.vary=np.arange(canvas_sizemax[1],canvas_sizemax[1])
+        self.varx=np.linspace(canvas_sizemin[0],canvas_sizemax[0],num=10000,retstep=false)#array to be used as an x variable
+        self.vary=np.linspace(canvas_sizemax[1],canvas_sizemax[1],num=10000,retstep=false)#array to be used as a y variable
         self.variablex=[]
         self.dimens=2
         self.canvas_xwidth=self.canvas_maxpt[0]-self.canvas_minpt[0]
@@ -15,4 +15,3 @@ class geo_session:
     #shapes added to ledger like this:
     #def addtoledger(self,geo_object)
     #    ledger=ledger+(geo_object,)+tuple(geo_object.attributes)
-    #
