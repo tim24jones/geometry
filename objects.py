@@ -7,20 +7,14 @@ class ledger:
 
 object_ledger=ledger([])
 
+#constructible operations, others postulates can be covered with logic:
+construct_ops('make point','connect line','make circle with center and radius')
+curve_types(line,ray,segment)
+
 def add_to_ledger(attributes):
     if attributes not in object_ledger:
         object_ledger=object_ledger+[attributes]
 
-
-    #def constructible_operation(self,construct_fn):
-    #    constructible_operations=(makepoint(),makeline(),make_circle_center_radius())
-        #the equality of right angles and infering the crossing of lines less than
-        #180 degrees apart can happen with logic rather than extra construction
-        #thus this covers all 5 postulates
-     #   if (construct_fn is in constructible_operations):
-      #      return True
-       # else
-        #    return False
 class point:
     def __init__(self,coords,name=None):
         self.xy=np.array(coords)
@@ -31,7 +25,6 @@ class point:
         add_to_ledger(self.attributes)
     def __str__(self):
         return self.attributes
-
 
 class line:
     def __init__(self,point,otherpoint):
@@ -51,12 +44,42 @@ class line:
         return np.vstack(self.point1,self.point2)
         def getdirection(self):
             return (self.onepoint-self.otherpoint)
-  #  def is_same(self,otherline):
-  #  def is_parallel(self,otherline):
-  #  def is_skew(self,otherline):
+
+    def ispointonline(self,point):
+        if self.eqnknown==False:
+            return 'Unknown'
+        elif self.eqnknown==True:
+            t=(self.point1.xy[0]-point.xy[0])/(self.point1.xy[0]-self.point2.xy[0]
+            for component in range(len(point)):
+                if t!=(self.point1.xy[component]-point.xy[component])/(self.point1.xy[component]-self.point2.xy[component]):
+                    return False
+            return True
+
+    def is_same(self,otherline)
+        if self.ispointonline(otherline.point1)==True and self.ispointonline(otherline.point2)==True:
+            if otherline.ispointonline(self.point1)==True and otherline.ispointonline(self.point2)==True:
+                return True
+            else:
+                return 'Error in calculation'
+         else:
+             return False
+    def is_parallel(self,otherline):
+        if not is_same(self,otherline):
+            if self.point1-self.point2==((otherline.point1-otherline.point2)*(1 or -1)):
+                if otherline.point1-otherline.point2==((self.point1-self.point2)(*1 or *-1)):
+                return True
+        else:
+            return False
+
+    def intersects(self,otherline): #returns intersection point
+        if self.is_same(otherline)==True
+            return True #returns true when it intersects at all its points
+        elif self.is_parallel(otherline):
+            return False
+        #find t with extra point from other line, then use to solve for new point
+
   #  def intersects(self,otherline):
   #  def equation(self):
-  #  def ispointonline(self,point):
   #  directionvect=aline-apoint
   #  componentlist=[]
   #  x=(apoint[0]-aline.onepoint[0])/aline.getdirection[0]
@@ -65,7 +88,6 @@ class line:
   #              return False
   #      return True
 
-        
 class segment: #line segment
     def __init__(self,point,otherpoint):
         self.point1=point
@@ -88,15 +110,43 @@ class segment: #line segment
     __str__(self):
         return self.attributes
 
-       # def is_same(self,otherline):
-       # def is_parallel(self,otherline):
+    def is_same(self,othersegment):
+        if (self.point1 in othersegment.points) and (self.point2 in othersegment.points):
+            return True
+        else:
+            return False
+
+    def ispointonsegment(self,point):
+        if self.eqnknown==False:
+            return 'Unknown'
+        elif self.eqnknown==True:
+            t=(point.xy[0]-self.point2.xy[0])/(self.point1.xy[0]-self.point2.xy[0])
+            for comp in range(len(point)):
+                u=((point.xy[comp]-self.point1.xy[comp])/(self.point1.xy[comp]-self.point2.xy[comp])>1)
+                if u!=t or u>1 or u<-1:
+                    return False
+                else:
+                    return True
+
+    def is_parallel(self,otherline):
+        if not is_same(self,otherline):
+            if self.point1-self.point2==((otherline.point1-otherline.point2)*(1 or -1)):
+                if otherline.point1-otherline.point2==((self.point1-self.point2)(*1 or *-1)):
+                return True
+        else:
+            return False
+
+    def is_shorter(self,othersegment):
+        return self.length<othersegment.length
+
+    def is_longer(self,othersegment):
+        return self.length>othersegment.length
+
+    def is_equal(self,othersegment):
+        return self.length==othersegment.length
+
        # def is_skew(self,otherline):
        # def intersects(self,otherline):
-       # def is_equal(self,otherlinesegment):
-       # def is_shorter(self,otherlinesegment):
-       # def is_longer(self,otherlinesegment):
-       # def extend(self,endpoint):
-       # def ispointonsegment(self,point):
 
 class ray:
     __init__(self,endpoint,otherpoint):
@@ -111,6 +161,7 @@ class ray:
         add_to_ledger(self.attributes)
     __str__(self):
         return self.attributes
+
 class intersection:
     __init__(self,line1,line2)
     #self.angle1:define 4 angles (minimum)
@@ -131,11 +182,36 @@ class circle:
             self.dia=2*radius
         else:
             self.dia=np.array(['2'+str(radius)],dtype=object)
+        if (np.dtype(self.center.xy) and np.dtype(self.radius))==('float64' or 'int64'):
+            self.eqn=np.array([radius**2,self.cent[0],self.cent[1])
+            self.eqnknown=True
+        else:
+            self.eqn=np.array([str(radius)+'^2=(x-'+str(center[0])+')^2+(y-'+str(center[1])+')^2'])
+            self.eqnknown=False
+
     def is_equal(othercircle):
+        return self.radius==othercircle.radius and self.cent==othercircle.cent
+
+    def is_congruent(othercircle):
+        return self.radius==othercircle.radius
+
     def point_is_on(self,point):
+        if eqnknown=False
+            return 'Unknown'
+        else:
+            return self.radius**2==(self.cent.xy[0]-point.xy[0])**2+(self.cent.xy[1]-point.xy[1])**2
+
     def point_is_in(self,point):
-    def point_is_outside(self,point):
-class intersection(self,oneline,twoline):
+        if eqnknown=False
+            return 'Unknown'
+        else:
+            return self.radius**2>(self.cent.xy[0]-point.xy[0])**2+(self.cent.xy[1]-point.xy[1])**2
+
+    def point_is_in(self,point):
+        if eqnknown=False
+            return 'Unknown'
+        else:
+            return self.radius**2<(self.cent.xy[0]-point.xy[0])**2+(self.cent.xy[1]-point.xy[1])**2
 
 class route:
     def __init__(self,pointlist,curvelist):
