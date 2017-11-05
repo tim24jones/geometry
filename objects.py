@@ -31,6 +31,7 @@ class line:
         self.point1=point
         self.point2=otherpoint
         self.points=np.vstack(self.point1,self.point2)
+        self.dir=self.point2.xy-self.point1.xy #direction vector
         if (np.dtype(self.point1.xy) and np.dtype(self.point2.xy))==('float64' or 'int64'):
             self.equation='r=',self.point1.xy, '+',(self.point2.xy-self.point1.xy),'t'
             self.eqnknown=True
@@ -71,14 +72,14 @@ class line:
         else:
             return False
 
-    def intersects(self,otherline): #returns intersection point
+    def intersects(self,otherline): #returns intersection point if exists, True if the same line, false if no intersection
         if self.is_same(otherline)==True
             return True #returns true when it intersects at all its points
         elif self.is_parallel(otherline):
             return False
-        #find t with extra point from other line, then use to solve for new point
+        else:
+            return np.linalg.solve((self.point1.xy-otherline.point1.xy),np.array([self.dir,otherline.dir]))
 
-  #  def intersects(self,otherline):
   #  def equation(self):
   #  directionvect=aline-apoint
   #  componentlist=[]
@@ -99,6 +100,7 @@ class segment: #line segment
             self.length=np.array(['sqrt((x-'+str(self.point2.xy[0])+'-'+str(self.point1.xy[0])+')^2+(y-'+str(self.point2.xy[1])+'='+str(self.point1.xy[1])+')^2)'], dtype=object)
             self.lengthknown=False
         self.points=np.vstack(self.point1,self.point2)
+        self.dir=self.point2.xy-self.point1.xy
         if (np.dtype(self.point1.xy) and np.dtype(self.point2.xy))==('float64' or 'int64'):
             self.equation='r=',self.point1.xy, '+',(self.point2.xy-self.point1.xy),'t'
             self.eqnknown=True
@@ -146,13 +148,24 @@ class segment: #line segment
         return self.length==othersegment.length
 
        # def is_skew(self,otherline):
-       # def intersects(self,otherline):
+    def intersects(self,otherline): #returns intersection point if exists, True if the same line, false if no intersection
+        if self.is_same(otherline)==True
+            return True #returns true when it intersects at all its points
+        elif self.is_parallel(otherline):
+            return False
+        else:
+            soln=np.linalg.solve((self.point1.xy-otherline.point1.xy),np.array([self.dir,otherline.dir]))
+            if (self.ispointonsegment(soln)==True):
+                return True
+            else:
+                return False
 
 class ray:
     __init__(self,endpoint,otherpoint):
         self.endpoint=endpoint
         self.arb=otherpoint #arbitrary point
         self.points=np.vstack(self.endpoint,self.arb)
+        self.dir=self.arb.xy-self.endpoint.xy
         if (np.dtype(self.endpoint.xy) and np.dtype(self.arb.xy))==('float64' or 'int64'):
             self.equation='r=',self.endpoint.xy, '+',(self.arb.xy-self.endpoint.xy),'t'
         else:
@@ -164,11 +177,13 @@ class ray:
 
 class intersection:
     __init__(self,line1,line2)
+    if line1.intersects(line2)==False:
+        return 'intersection=None'
     #self.angle1:define 4 angles (minimum)
 
 class angle:
     def __init__(self,vertex,point1,point2):
-        self.intersection
+        self.intersection(ray(vertex,point1),ray(vertex,point2))
         self.vertex=vertex
         self.p1=point1
         self.p2=point2
@@ -214,8 +229,9 @@ class circle:
             return self.radius**2<(self.cent.xy[0]-point.xy[0])**2+(self.cent.xy[1]-point.xy[1])**2
 
 class route:
-    def __init__(self,pointlist,curvelist):
+    def __init__(self,pointlist):
     def is_closed(self):
+        return pointlist[0]==pointlist[-1]
 class figure(closedroute):
 class rect_figure(closed_route with lines):
 class polygon(n_sides,rect_figure):
