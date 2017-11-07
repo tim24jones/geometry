@@ -230,10 +230,13 @@ class circle:
 
 class route:
     def __init__(self,pointlist):
+        for a in range(len(pointlist)-1):
+            self.lnlst(a)=line(pointlist[a],pointlist[a+1]
     def is_closed(self):
         return pointlist[0]==pointlist[-1]
 class figure(closedroute):
 class rect_figure(closed_route with lines):
 class polygon(n_sides,rect_figure):
+     def is_equilat:
 class reg_polygon(n_equal sides,polygon):
 #equilateral, equiangular, subtending, congruence, equality, in ratio, similar, adjacent
